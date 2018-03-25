@@ -2,10 +2,11 @@ import * as React from "react";
 import * as Web3 from "web3";
 import getWeb3 from "./util/getWeb3";
 
-const appStyles = require("./App.css");
-const logo = require("./logo.svg");
+const styles = require("./App.css");
 
-import MetaWallet from "./components/MetaWallet";
+import { Munky69rockCV } from "./components/Munky69rockCV";
+import { isDevelopment } from "./util/environments";
+import { isMainNetwork } from "./util/network";
 
 interface IAppState {
   web3: Web3;
@@ -21,37 +22,48 @@ class App extends React.Component<{}, IAppState> {
 
   public async componentWillMount() {
     const web3 = await getWeb3();
+
+    if (!await this.isValidEnvironment(web3)) {
+      alert("Please use Main Ethereum Network to proceed.");
+      return;
+    }
+
     this.setState({
       web3,
     });
+
+    console.log("MetaMask:", (this.state.web3.currentProvider as any).isMetaMask ? "yes" : "no");
+    console.log("MIST:", (window as any).mist ? "yes" : "no");
   }
 
   public render() {
     return (
-      <div className={appStyles.app}>
-        <div className={appStyles.appHeader}>
-          <img src={logo} className={appStyles.appLogo} alt="logo" />
-          <h2>React Ethereum DApp Template</h2>
-        </div>
-        <div className={appStyles.appIntro}>
+      <div className={styles.app}>
+
+        <div className={styles.appIntro}>
           {this.state.web3 ? (
             <div>
-              <p>
-                Provider is MetaMask: {(this.state.web3.currentProvider as any).isMetaMask ? "yes" : "no"}
-              </p>
-              <p>
-                Provider is Mist: {(window as any).mist ? "yes" : "no"}
-              </p>
               {(this.state.web3.currentProvider as any).host ?
                 <p>Provider is {(this.state.web3.currentProvider as any).host}</p> : null}
             </div>
           ) :
-            <p>Web3 is loading</p>}
+            <div className={styles.loading}>
+              <div>Web3 is loading</div>
+            </div>
+          }
         </div>
-        <hr />
-        {this.state.web3 ? <MetaWallet web3={this.state.web3} /> : null}
+
+        {this.state.web3 ? <Munky69rockCV web3={this.state.web3} /> : null}
       </div>
     );
+  }
+
+  private async isValidEnvironment(web3: Web3): Promise<boolean> {
+    if (isDevelopment()) {
+      return true;
+    }
+
+    return isMainNetwork(web3);
   }
 }
 

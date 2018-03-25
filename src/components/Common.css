@@ -1,0 +1,21 @@
+.name {
+  color: #fff;
+  text-transform: uppercase;
+  margin-bottom: 1.5rem;
+  font-size: 2.5rem;
+}
+
+.name::after {
+  content: "";
+  display: block;
+  width: 0;
+  animation: stretch 1s;
+  animation-fill-mode: forwards;
+  border-bottom: 1px solid #999;
+}
+
+@keyframes stretch {
+  100% {
+    width: 100%;
+  }
+}

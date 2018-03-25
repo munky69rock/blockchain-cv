@@ -1,0 +1,20 @@
+.skill {
+  border: 0.0625rem solid #ccc;
+  padding: 0.5rem 1rem;
+  margin-right: 0.25rem;
+  margin-bottom: 0.25rem;
+}
+
+.skill:hover {
+  opacity: .6;
+  color: #6c757d;
+  border-color: #6c757d;
+  transition: color 0.5s, border-color 0.5s;
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 #7f7f7f;
+  }
+}
+

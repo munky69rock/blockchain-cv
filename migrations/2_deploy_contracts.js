@@ -1,5 +1,5 @@
-const MetaCoin = artifacts.require("./MetaCoin.sol");
+const Munky69rockCV = artifacts.require("./Munky69rockCV.sol");
 
 module.exports = function(deployer) {
-  deployer.deploy(MetaCoin);
+  deployer.deploy(Munky69rockCV);
 };

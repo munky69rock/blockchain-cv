@@ -1,0 +1,86 @@
+.tipButton {
+  background: transparent none;
+  color: #ccc;
+  border: 1px solid #ccc;
+  padding: 0.5rem 1rem;
+  margin-right: 0.25rem;
+  margin-bottom: 0.25rem;
+}
+
+.tipButton:focus {
+  text-decoration: none;
+  outline: 0;
+  box-shadow: 0 0 0 0.2rem rgba(108,117,125,.5);
+}
+
+.tipButton:hover {
+  opacity: .6;
+  animation: pulse 1s;
+  box-shadow: 0 0 0 1.5em rgba(255, 255, 255, 0);
+}
+
+.tipButton:not(:disabled):not(.disabled) {
+  cursor: pointer;
+}
+
+.button {
+  background: transparent none;
+  color: #ccc;
+  border-color: #ccc;
+  padding: 0.5rem 1rem;
+  margin-right: 0.25rem;
+  margin-bottom: 0.25rem;
+}
+
+.button:focus {
+  text-decoration: none;
+  outline: 0;
+  box-shadow: 0 0 0 0.2rem rgba(108,117,125,.5);
+}
+
+.button:hover {
+  color: #6c757d;
+  border-color: #6c757d;
+  text-decoration: none;
+  transition: color 0.5s, border-color 0.5s;
+}
+
+.button:not(:disabled):not(.disabled) {
+  cursor: pointer;
+}
+
+.modal {
+  position: fixed;
+  z-index: 101;
+  height: 100vh;
+  width: 100%;
+  top: 0;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.8);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.closeModalButton {
+  text-decoration: none;
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  font-size: 2rem;
+}
+
+.closeModalButtonIcon {
+  color: #fff;
+}
+
+.closeModalButtonIcon:hover {
+  color: #999;
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 #7f7f7f;
+  }
+}

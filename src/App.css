@@ -1,28 +1,17 @@
 .app {
-  text-align: center;
+  background-color: #111;
+  color: #ccc;
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  min-height: 100vh;
+  overflow: hidden;
+  font-family: 'Poppins', sans-serif;
 }
 
-.appLogo {
-  animation: appLogoSpin infinite 20s linear;
-  height: 50px;
-}
-
-.appHeader {
-  background-color: #222;
-  height: 90px;
-  padding: 20px;
-  color: white;
-}
-
-.appIntro {
-  font-size: large;
-}
-
-@keyframes appLogoSpin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.loading {
+  display: flex;
+  height: 100vh;
+  align-items: center;
+  justify-content: center;
 }

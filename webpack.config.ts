@@ -6,6 +6,9 @@ import * as webpack from "webpack";
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 // postcss plugins
 const autoprefixer = require("autoprefixer");
+// html plugins
+const HtmlWebpackPlugin = require("html-webpack-plugin");
+const packageJson = require("./package.json");
 
 const isProd = (): boolean => {
   return process.env.NODE_ENV === "production";
@@ -30,9 +33,15 @@ const buildConfig: webpack.Configuration = {
       {
         test: /\.css$/,
         use: [
-          { loader: "style-loader", options: { sourceMap: !isProd() } },
           {
-            loader: "css-loader", options: {
+            loader: "style-loader",
+            options: {
+              sourceMap: !isProd(),
+            },
+          },
+          {
+            loader: "css-loader",
+            options: {
               localIdentName: isProd() ? "[hash:base64]" : "[path][name]__[local]__[hash:base64:6]",
               minimize: isProd(),
               modules: true,
@@ -64,11 +73,6 @@ const buildConfig: webpack.Configuration = {
           /\.json$/,
         ],
         loader: "file-loader",
-        query: {
-          name: "[hash].[ext]",
-          outputPath: "media/",
-          publicPath: "/",
-        },
       },
     ],
   } as webpack.NewModule,
@@ -78,6 +82,7 @@ const buildConfig: webpack.Configuration = {
     path: path.join(__dirname, "build/app"),
   },
   plugins: [
+    new HtmlWebpackPlugin({ ...{ template: "public/index.html", inject: false }, ...packageJson }),
     // exclude locale files in moment
     new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
     // pack vendor chunk
