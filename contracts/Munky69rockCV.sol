@@ -109,14 +109,14 @@ contract Munky69rockCV is CVExtender, Ownable {
         profile.location = _location;
         profile.description = _description;
 
-        UpdatedProfile();
+        emit UpdatedProfile();
         lastUpdated = now;
     }
 
     function addExperience(string _name, string _role, string _startedOn, string _endedOn, string _description) external onlyOwner returns(uint) {
         Experience memory experience = Experience(_name, _role, _startedOn, _endedOn, _description);
         uint _id = experiences.push(experience) - 1;
-        UpdatedExperience();
+        emit UpdatedExperience();
         lastUpdated = now;
         return _id;
     }
@@ -128,7 +128,7 @@ contract Munky69rockCV is CVExtender, Ownable {
         experience.startedOn = _startedOn;
         experience.endedOn = _endedOn;
         experience.description = _description;
-        UpdatedExperience();
+        emit UpdatedExperience();
         lastUpdated = now;
     }
 
@@ -144,7 +144,7 @@ contract Munky69rockCV is CVExtender, Ownable {
     function addEducation(string _name, string _fieldOfStudy, string _startedOn, string _endedOn, string _description) external onlyOwner returns(uint) {
         Education memory education = Education(_name, _fieldOfStudy, _startedOn, _endedOn, _description);
         uint _id = educations.push(education) - 1;
-        UpdatedEducation();
+        emit UpdatedEducation();
         lastUpdated = now;
         return _id;
     }
@@ -165,20 +165,20 @@ contract Munky69rockCV is CVExtender, Ownable {
         education.startedOn = _startedOn;
         education.endedOn = _endedOn;
         education.description = _description;
-        UpdatedEducation();
+        emit UpdatedEducation();
         lastUpdated = now;
     }
 
     function addSkill(string _skill) external onlyOwner returns(uint) {
         uint _id = skills.push(_skill) - 1;
-        UpdatedSkill();
+        emit UpdatedSkill();
         lastUpdated = now;
         return _id;
     }
 
     function editSkill(uint _id, string _skill) external onlyOwner returns(uint) {
         skills[_id] = _skill;
-        UpdatedSkill();
+        emit UpdatedSkill();
         lastUpdated = now;
     }
 
@@ -192,7 +192,7 @@ contract Munky69rockCV is CVExtender, Ownable {
 
     function addLink(string _linkType, string _url) external onlyOwner returns(uint) {
         uint _id = links.push(Link(_linkType, _url)) - 1;
-        UpdatedLink();
+        emit UpdatedLink();
         lastUpdated = now;
         return _id;
     }
@@ -201,7 +201,7 @@ contract Munky69rockCV is CVExtender, Ownable {
         Link storage link = links[_id];
         link.linkType = _linkType;
         link.url = _url;
-        UpdatedLink();
+        emit UpdatedLink();
         lastUpdated = now;
     }
 
@@ -224,19 +224,19 @@ contract Munky69rockCV is CVExtender, Ownable {
 
     function setAddress(string _url) external onlyOwner {
         url = _url;
-        UpdatedMetadata();
+        emit UpdatedMetadata();
         lastUpdated = now;
     }
 
     function setTitle(string _title) external onlyOwner {
         title = _title;
-        UpdatedMetadata();
+        emit UpdatedMetadata();
         lastUpdated = now;
     }
 
     function setDescription(string _description) external onlyOwner {
         description = _description;
-        UpdatedMetadata();
+        emit UpdatedMetadata();
         lastUpdated = now;
     }
 
@@ -262,6 +262,6 @@ contract Munky69rockCV is CVExtender, Ownable {
 
     function() payable public {
         require(msg.value > 0);
-        ReceivedFunds(msg.sender, msg.value);
+        emit ReceivedFunds(msg.sender, msg.value);
     }
 }
