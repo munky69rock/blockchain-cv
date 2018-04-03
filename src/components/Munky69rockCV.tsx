@@ -6,21 +6,19 @@ const Munky69rockCVContract = TruffleContract(require("../../build/contracts/Mun
 import { IMunky69rockCV } from "../contract-interfaces/IMunky69rockCV";
 import { Educations } from "./Educations";
 import { Experiences } from "./Experiences";
+import { Footer } from "./Footer";
 import { Links } from "./Links";
 import { Metadata } from "./Metadata";
 import { Profile } from "./Profile";
 import { Skills } from "./Skills";
-import { Tip } from "./Tip";
 
 const styles = require("./Munky69rockCV.css");
-const packageJson = require("../../package.json");
 
 interface IMunky69rockCVProps {
   web3: Web3;
 }
 
 interface IMunky69rockCVState {
-  lastUpdated?: Date;
   isOwner: boolean;
   isEditable: boolean;
 }
@@ -55,8 +53,6 @@ Requirements:
       `);
       return;
     }
-
-    this.listenToEvents();
 
     await this.load();
   }
@@ -119,61 +115,11 @@ Requirements:
           </div>
         </div>
 
-        <Tip web3={this.props.web3} contractInstance={this.contractInstance} isOwner={this.state.isEditable}/>
-
         <Metadata web3={this.props.web3} contractInstance={this.contractInstance} isOwner={this.state.isEditable}/>
 
-        {/* TODO */}
-        <div className="container text-center py-3">
-          <p>LAST UPDATED: {this.state.lastUpdated && this.state.lastUpdated.toDateString()}</p>
-          <div className="my-3">
-            <a
-              className="fa fa-github-alt text-white mr-2"
-              href="https://github.com/munky69rock/ethereum-cv"
-              target="_blank"
-            />
-            <a
-              className="fa fa-twitter-square text-white mr-2"
-              href={
-                "https://twitter.com/intent/tweet?" +
-                [
-                  `url=${encodeURIComponent(location.href)}`,
-                  `text=${encodeURIComponent(packageJson.description)}`,
-                ].join("&")
-              }
-              onClick={(event: React.MouseEvent<HTMLAnchorElement>) => {
-                event.preventDefault();
-                window.open(
-                  event.currentTarget.href,
-                  "twitter",
-                  "width=650, height=450, menubar=no, toolbar=no, scrollbars=yes",
-                );
-              }}
-            />
-            <a
-              className="fa fa-facebook-square text-white"
-              href={`https://www.facebook.com/share.php?u=${encodeURIComponent(location.href)}`}
-              onClick={(event: React.MouseEvent<HTMLAnchorElement>) => {
-                event.preventDefault();
-                window.open(
-                  event.currentTarget.href,
-                  "facebook",
-                  "width=650, height=450, menubar=no, toolbar=no, scrollbars=yes",
-                );
-              }}
-            />
-          </div>
-        </div>
+        <Footer web3={this.props.web3} contractInstance={this.contractInstance} isOwner={this.state.isEditable}/>
       </div>
     );
-  }
-
-  private async getLastUpdated(): Promise<Date> {
-    try {
-      return new Date((await this.contractInstance.getLastUpdated()).toNumber() * 1000);
-    } catch (err) {
-      console.error(err);
-    }
   }
 
   private async isOwner(): Promise<boolean> {
@@ -185,30 +131,14 @@ Requirements:
   }
 
   private async load() {
-    const [lastUpdated, isOwner]: [Date, boolean] = await Promise.all([
-      this.getLastUpdated(),
-      this.isOwner(),
-    ]);
+    const isOwner = await this.isOwner();
 
     this.setState((state: IMunky69rockCVState): IMunky69rockCVState => {
       return {
-        lastUpdated,
         isOwner,
         isEditable: isOwner,
       };
     });
-  }
-
-  private listenToEvents() {
-    const callback = async () => {
-      console.log("cv updated");
-      await this.load();
-    };
-    this.contractInstance.UpdatedProfile().watch(callback);
-    this.contractInstance.UpdatedExperience().watch(callback);
-    this.contractInstance.UpdatedEducation().watch(callback);
-    this.contractInstance.UpdatedLink().watch(callback);
-    this.contractInstance.UpdatedSkill().watch(callback);
   }
 
   private onClick(event: React.MouseEvent<HTMLButtonElement>) {

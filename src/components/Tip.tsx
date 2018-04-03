@@ -47,6 +47,7 @@ class Tip extends React.Component<ITipProps, ITipState> {
         console.error(err);
         alert(`
 Oops! Something wrong...
+
 ${err}
       `);
         return;
@@ -72,7 +73,7 @@ ${err}
     }
 
     return (
-      <div className="text-center m-5">
+      <div className="text-center mb-5">
         <button
           className={styles.tipButton}
           onClick={this.onClick}
@@ -111,6 +112,7 @@ ${err}
                       href="#"
                       onClick={this.onClick}
                       className={styles.button}
+                      style={{ border: "none" }}
                     >
                       Cancel
                     </a>
@@ -139,22 +141,26 @@ ${err}
   private async onSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     try {
-      await this.props.contractInstance.sendTransaction({
-        from: this.props.web3.eth.accounts[0],
-        value: this.props.web3.toWei(this.state.ether, "ether"),
-      });
       this.setState((state: ITipState): ITipState => {
         state.isWaitingForMining = true;
         return state;
       });
+      await this.props.contractInstance.sendTransaction({
+        from: this.props.web3.eth.accounts[0],
+        value: this.props.web3.toWei(this.state.ether, "ether"),
+      });
     } catch (err) {
+      this.setState((state: ITipState): ITipState => {
+        state.isWaitingForMining = false;
+        return state;
+      });
       if (/User denied transaction signature/.test(err)) {
         return;
       }
-      console.dir(err);
       console.error(err);
       alert(`
 Oops! Something wrong...
+
 ${err}
       `);
     }
