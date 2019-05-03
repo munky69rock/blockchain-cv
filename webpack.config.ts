@@ -2,6 +2,10 @@
 import * as path from "path";
 import * as webpack from "webpack";
 
+interface INewModule {
+  rules: any;
+}
+
 // webpack plugins
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 // postcss plugins
@@ -75,7 +79,7 @@ const buildConfig: webpack.Configuration = {
         loader: "file-loader",
       },
     ],
-  } as webpack.NewModule,
+  } as INewModule,
   output: {
     filename: "[name].js",
     publicPath: "/",
@@ -85,11 +89,6 @@ const buildConfig: webpack.Configuration = {
     new HtmlWebpackPlugin({ ...{ template: "public/index.html", inject: false }, ...packageJson }),
     // exclude locale files in moment
     new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
-    // pack vendor chunk
-    new webpack.optimize.CommonsChunkPlugin({
-      name: "vendor_bundle",
-      minChunks: Infinity,
-    }),
     // copy files in public to build
     new CopyWebpackPlugin([{
       context: "public",
@@ -103,6 +102,12 @@ const buildConfig: webpack.Configuration = {
   resolve: {
     extensions: [".ts", ".tsx", ".js", ".jsx"],
   },
+  optimization: {
+    splitChunks: {
+      name: "vendor_bundle",
+      minChunks: Infinity,
+    },
+  },
 };
 
 if (isProd()) {
@@ -112,12 +117,11 @@ if (isProd()) {
     new webpack.DefinePlugin({
       "process.env": { NODE_ENV: JSON.stringify("production") },
     }),
-    // minify
-    new webpack.optimize.UglifyJsPlugin(),
   ]);
+  buildConfig.optimization.minimize = true;
 } else {
   // Development build tweaks
-  const buildConfigModule = buildConfig.module as webpack.NewModule;
+  const buildConfigModule = buildConfig.module as INewModule;
   buildConfigModule.rules = (buildConfigModule.rules || []).concat([
     // tslint
     {
